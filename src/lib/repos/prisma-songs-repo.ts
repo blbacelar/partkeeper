@@ -24,18 +24,21 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
         version: meta?.version || 1,
         updatedAt: meta?.updatedAt.toISOString() || new Date().toISOString()
       },
-      songs: songs.map((song: any): TSong => ({
-        id: song.id,
-        title: song.title,
-        artist: song.artist,
-        tags: song.tags,
-        defaultRole: song.defaultRole as string | null,
-        parts: song.parts as Record<string, string>,
-        lyrics: song.lyrics,
-        source: song.source,
-        notes: song.notes,
-        updatedAt: song.updatedAt.toISOString()
-      } as unknown as TSong))
+      songs: songs.map((song: unknown): TSong => {
+        const s = song as Record<string, unknown>
+        return {
+          id: s.id as string,
+          title: s.title as string,
+          artist: s.artist as string | null,
+          tags: s.tags as string[],
+          defaultRole: s.defaultRole as string | null,
+          parts: s.parts as Record<string, string>,
+          lyrics: s.lyrics as string | null,
+          source: s.source as string | null,
+          notes: s.notes as string | null,
+          updatedAt: (s.updatedAt as Date).toISOString()
+        } as unknown as TSong
+      })
     }
   }
 
