@@ -19,7 +19,7 @@ export function SongCard({ song }: SongCardProps) {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+              <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-tight">
                 {song.title}
               </CardTitle>
               {song.artist && (
