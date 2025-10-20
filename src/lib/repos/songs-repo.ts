@@ -153,8 +153,9 @@ export function createSongsRepository<TSong extends { id: string }>(): SongsRepo
   
   if (backend === "prisma") {
     // Dynamic import to avoid loading Prisma client when not needed
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { PrismaSongsRepository } = require('./prisma-songs-repo')
-    return new (PrismaSongsRepository as any)()
+    return new (PrismaSongsRepository as new () => SongsRepository<TSong>)()
   }
   
   throw new Error(`Unsupported backend: ${backend}`)

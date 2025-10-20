@@ -16,13 +16,13 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
         version: meta?.version || 1,
         updatedAt: meta?.updatedAt.toISOString() || new Date().toISOString()
       },
-      songs: songs.map((song: any): TSong => ({
+      songs: songs.map((song): TSong => ({
         id: song.id,
         title: song.title,
         artist: song.artist,
         tags: song.tags,
-        defaultRole: song.defaultRole as any,
-        parts: song.parts as any,
+        defaultRole: song.defaultRole as string | null,
+        parts: song.parts as Record<string, string>,
         lyrics: song.lyrics,
         source: song.source,
         notes: song.notes,
@@ -32,17 +32,17 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
   }
 
   async create(data: Omit<TSong, "id">): Promise<TSong> {
-    const songData = data as any
+    const songData = data as Record<string, unknown>
     const song = await prisma.song.create({
       data: {
-        title: songData.title,
-        artist: songData.artist,
-        tags: songData.tags || [],
-        defaultRole: songData.defaultRole,
-        parts: songData.parts || {},
-        lyrics: songData.lyrics,
-        source: songData.source,
-        notes: songData.notes
+        title: songData.title as string,
+        artist: songData.artist as string | null,
+        tags: (songData.tags as string[]) || [],
+        defaultRole: songData.defaultRole as string | null,
+        parts: (songData.parts as Record<string, string>) || {},
+        lyrics: songData.lyrics as string | null,
+        source: songData.source as string | null,
+        notes: songData.notes as string | null
       }
     })
 
@@ -54,8 +54,8 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
       title: song.title,
       artist: song.artist,
       tags: song.tags,
-      defaultRole: song.defaultRole as any,
-      parts: song.parts as any,
+      defaultRole: song.defaultRole as string | null,
+      parts: song.parts as Record<string, string>,
       lyrics: song.lyrics,
       source: song.source,
       notes: song.notes,
@@ -64,18 +64,18 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
   }
 
   async update(id: string, data: Omit<TSong, "id">): Promise<TSong> {
-    const songData = data as any
+    const songData = data as Record<string, unknown>
     const song = await prisma.song.update({
       where: { id },
       data: {
-        title: songData.title,
-        artist: songData.artist,
-        tags: songData.tags || [],
-        defaultRole: songData.defaultRole,
-        parts: songData.parts || {},
-        lyrics: songData.lyrics,
-        source: songData.source,
-        notes: songData.notes
+        title: songData.title as string,
+        artist: songData.artist as string | null,
+        tags: (songData.tags as string[]) || [],
+        defaultRole: songData.defaultRole as string | null,
+        parts: (songData.parts as Record<string, string>) || {},
+        lyrics: songData.lyrics as string | null,
+        source: songData.source as string | null,
+        notes: songData.notes as string | null
       }
     })
 
@@ -87,8 +87,8 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
       title: song.title,
       artist: song.artist,
       tags: song.tags,
-      defaultRole: song.defaultRole as any,
-      parts: song.parts as any,
+      defaultRole: song.defaultRole as string | null,
+      parts: song.parts as Record<string, string>,
       lyrics: song.lyrics,
       source: song.source,
       notes: song.notes,
