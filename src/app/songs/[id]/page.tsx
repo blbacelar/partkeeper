@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { YouTubePart } from '@/components/YouTubePart'
@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Music, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Song, SongsData, songsDataSchema, Role } from '@/lib/schemas'
+import { Song, songsDataSchema, Role } from '@/lib/schemas'
 import { getStoredTab, setStoredTab } from '@/lib/storage'
 import { motion } from 'framer-motion'
 
@@ -20,8 +20,7 @@ export default function SongDetails() {
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<string>('reference')
 
-  const roles: Role[] = ['1st-tenor', '2nd-tenor', 'baritone', 'bass']
-  const allTabs = ['reference', ...roles]
+  const roles: Role[] = useMemo(() => ['1st-tenor', '2nd-tenor', 'baritone', 'bass'], [])
 
   useEffect(() => {
     async function loadSong() {

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react'
-import { Song, SongsData, songsDataSchema } from '@/lib/schemas'
+import { Song, songsDataSchema } from '@/lib/schemas'
 import { useRouter } from 'next/navigation'
 
 export default function SongManagement() {

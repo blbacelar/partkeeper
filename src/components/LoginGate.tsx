@@ -29,11 +29,6 @@ export function LoginGate({ children }: LoginGateProps) {
     }
   }
 
-  const handleLogout = () => {
-    clearStoredAuth()
-    setIsAuth(false)
-    setAccessCode('')
-  }
 
   if (!isAuth) {
     return (

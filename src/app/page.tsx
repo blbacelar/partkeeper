@@ -6,7 +6,7 @@ import { SongCard } from '@/components/SongCard'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Search, Settings, Music, Plus } from 'lucide-react'
-import { Song, SongsData, songsDataSchema } from '@/lib/schemas'
+import { Song, songsDataSchema } from '@/lib/schemas'
 import Link from 'next/link'
 
 export default function Dashboard() {
@@ -109,7 +109,7 @@ export default function Dashboard() {
                 <div>
                   <h3 className="text-xl font-semibold text-foreground">No songs found</h3>
                   <p className="text-muted-foreground">
-                    No songs match "{searchQuery}". Try a different search term.
+                    No songs match &ldquo;{searchQuery}&rdquo;. Try a different search term.
                   </p>
                 </div>
                 <Button
