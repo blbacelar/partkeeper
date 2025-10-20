@@ -115,7 +115,7 @@ export default function SongDetails() {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="container mx-auto px-4 py-6">
+        <main className="container mx-auto px-4 py-6 max-w-4xl">
         <div className="space-y-6">
           <div className="flex items-center gap-4">
             <Button
