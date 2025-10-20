@@ -1,10 +1,20 @@
-import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import path from 'path'
 
-const prisma = new PrismaClient()
+// Dynamic import to avoid build-time errors when Prisma client isn't generated
+async function getPrismaClient() {
+  try {
+    const { PrismaClient } = await import('@prisma/client')
+    return new PrismaClient()
+  } catch (error) {
+    console.error('Prisma client not found. Run "npm run db:generate" first.')
+    throw error
+  }
+}
 
 async function seedDatabase() {
+  const prisma = await getPrismaClient()
+  
   try {
     console.log('🌱 Seeding database...')
 
