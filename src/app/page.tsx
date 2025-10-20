@@ -77,6 +77,20 @@ export default function Dashboard() {
                 </Button>
               </Link>
             </div>
+            
+            {/* Production Warning */}
+            {process.env.NODE_ENV === 'production' && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-2xl mx-auto">
+                <div className="flex items-center gap-2 text-yellow-800">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span className="text-sm font-medium">Demo Mode</span>
+                </div>
+                <p className="text-sm text-yellow-700 mt-1">
+                  In production, song changes are temporary and will reset on server restart. 
+                  For persistent storage, integrate with a database.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Search Section */}

@@ -44,21 +44,65 @@ A modern, mobile-first web application for managing quartet songs with per-voice
    cp env.example .env.local
    ```
    
-   Edit `.env.local` and set your access code:
+   Edit `.env.local` and configure your setup:
+   
+   **For file-based storage (default):**
    ```env
    NEXT_PUBLIC_ACCESS_CODE=your-secret-code
    NEXT_PUBLIC_SONGS_BACKEND=file
    SONGS_FILE_PATH=public/data/songs.json
    ```
+   
+   **For database storage (Prisma):**
+   ```env
+   NEXT_PUBLIC_ACCESS_CODE=your-secret-code
+   NEXT_PUBLIC_SONGS_BACKEND=prisma
+   DATABASE_URL="postgresql://username:password@localhost:5432/partkeeper"
+   ```
 
-4. **Run the development server**
+  4. **Set up database (if using Prisma)**
+     
+     **For Supabase (Recommended):**
+     1. Create a new project at [supabase.com](https://supabase.com)
+     2. Go to Settings → Database to get your connection string
+     3. Update your `.env.local` with the Supabase connection details:
+        ```env
+        NEXT_PUBLIC_SONGS_BACKEND=prisma
+        DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
+        DIRECT_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres?pgbouncer=true&connection_limit=1"
+        ```
+     4. Run the database setup commands:
+        ```bash
+        # Generate Prisma client
+        npm run db:generate
+         
+        # Push schema to database
+        npm run db:push
+         
+        # Seed with existing songs
+        npm run db:seed
+        ```
+     
+     **For local PostgreSQL:**
+     ```bash
+     # Generate Prisma client
+     npm run db:generate
+     
+     # Push schema to database
+     npm run db:push
+     
+     # Seed with existing songs
+     npm run db:seed
+     ```
+
+5. **Run the development server**
    ```bash
    npm run dev
    # or
    pnpm dev
    ```
 
-5. **Open your browser**
+6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 🎯 Usage

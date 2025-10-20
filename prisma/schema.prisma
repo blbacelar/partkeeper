@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+        
+model Song {
+  id          String   @id @default(cuid())
+  title       String
+  artist      String?
+  tags        String[] @default([])
+  defaultRole String?  @map("default_role")
+  parts       Json     // Store voice parts as JSON
+  lyrics      String?
+  source      String?
+  notes       String?
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("songs")
+}
+
+model Meta {
+  id        String   @id @default(cuid())
+  version   Int      @default(1)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("meta")
+}
