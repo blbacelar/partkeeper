@@ -2,7 +2,15 @@ import { prisma } from '@/lib/prisma'
 import { SongsRepository, SongsRepoRecord } from './songs-repo'
 
 export class PrismaSongsRepository<TSong extends { id: string }> implements SongsRepository<TSong> {
+  private checkPrisma() {
+    if (!prisma) {
+      throw new Error('Prisma client not available. Make sure to run "npm run db:generate" first.')
+    }
+  }
+
   async list(): Promise<SongsRepoRecord<TSong>> {
+    this.checkPrisma()
+    
     const songs = await prisma.song.findMany({
       orderBy: { createdAt: 'desc' }
     })
@@ -16,7 +24,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
         version: meta?.version || 1,
         updatedAt: meta?.updatedAt.toISOString() || new Date().toISOString()
       },
-      songs: songs.map((song): TSong => ({
+      songs: songs.map((song: any): TSong => ({
         id: song.id,
         title: song.title,
         artist: song.artist,
@@ -32,6 +40,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
   }
 
   async create(data: Omit<TSong, "id">): Promise<TSong> {
+    this.checkPrisma()
     const songData = data as Record<string, unknown>
     const song = await prisma.song.create({
       data: {
@@ -64,6 +73,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
   }
 
   async update(id: string, data: Omit<TSong, "id">): Promise<TSong> {
+    this.checkPrisma()
     const songData = data as Record<string, unknown>
     const song = await prisma.song.update({
       where: { id },
@@ -97,6 +107,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
   }
 
   async delete(id: string): Promise<void> {
+    this.checkPrisma()
     await prisma.song.delete({
       where: { id }
     })
@@ -106,6 +117,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
   }
 
   private async updateMeta(): Promise<void> {
+    this.checkPrisma()
     await prisma.meta.upsert({
       where: { id: 'main' },
       update: {

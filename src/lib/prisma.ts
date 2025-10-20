@@ -1,9 +1,25 @@
-import { PrismaClient } from '@prisma/client'
+// Dynamic import to avoid build-time errors when Prisma client isn't generated
+let PrismaClient: any = null
+let prisma: any = null
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+try {
+  const { PrismaClient: PC } = require('@prisma/client')
+  PrismaClient = PC
+} catch (error) {
+  // Prisma client not available - this is expected during build
+  console.warn('Prisma client not available during build')
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+const globalForPrisma = globalThis as unknown as {
+  prisma: any
+}
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (PrismaClient) {
+  prisma = globalForPrisma.prisma ?? new PrismaClient()
+  if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+} else {
+  // Fallback for when Prisma client is not available
+  prisma = null
+}
+
+export { prisma }
