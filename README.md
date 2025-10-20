@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PartKeeper
+
+A mobile-first web app for tracking quartet songs with per-voice YouTube parts and lyrics.
+
+## Features
+
+- **Authentication**: Simple access code-based login
+- **Song Library**: Browse and search through your quartet song collection
+- **Per-Voice Parts**: YouTube embeds for each voice part (1st-tenor, 2nd-tenor, baritone, bass)
+- **Lyrics**: Toggleable lyrics display for each song
+- **Mobile-First**: Optimized for mobile devices with thumb-friendly UI
+- **Tab Memory**: Remembers your last selected voice part per song
+- **Deep Linking**: Direct links to specific voice parts (e.g., `#bass`)
+- **Search**: Client-side search across song titles, artists, and tags
+
+## Tech Stack
+
+- **Next.js 14** with App Router
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **shadcn/ui** for components
+- **Zod** for data validation
+- **Framer Motion** for animations
+- **Lucide React** for icons
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies**:
+   ```bash
+   npm install
+   # or
+   pnpm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+2. **Set up environment variables**:
+   ```bash
+   cp env.example .env.local
+   ```
+   
+   Edit `.env.local` and set your access code:
+   ```
+   NEXT_PUBLIC_ACCESS_CODE=your-secret-code
+   ```
+
+3. **Run the development server**:
+   ```bash
+   npm run dev
+   # or
+   pnpm dev
+   ```
+
+4. **Open your browser** and navigate to `http://localhost:3000`
+
+## Data Structure
+
+Songs are stored in `/public/data/songs.json` with the following schema:
+
+```typescript
+{
+  meta: { version: number, updatedAt: string },
+  songs: Array<{
+    id: string,
+    title: string,
+    artist?: string,
+    tags?: string[],
+    defaultRole?: "1st-tenor"|"2nd-tenor"|"baritone"|"bass",
+    parts: Record<"1st-tenor"|"2nd-tenor"|"baritone"|"bass", string>,
+    lyrics?: string,
+    source?: string,
+    notes?: string,
+    updatedAt?: string
+  }>
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Login**: Enter the access code to access the app
+2. **Browse Songs**: View all available songs on the dashboard
+3. **Search**: Use the search bar to find specific songs
+4. **Select a Song**: Click on any song card to view details
+5. **Choose Voice Part**: Use the tabs to switch between voice parts
+6. **Watch & Learn**: Play YouTube videos and toggle lyrics as needed
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features in Detail
 
-## Learn More
+### Authentication
+- Simple access code authentication
+- Session persistence with localStorage
+- Automatic logout functionality
 
-To learn more about Next.js, take a look at the following resources:
+### Song Management
+- Responsive card-based song library
+- Real-time search across titles, artists, and tags
+- Song details with metadata display
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Voice Parts
+- Tabbed interface for each voice part
+- YouTube video embeds with lazy loading
+- Toggleable lyrics display
+- Smooth animations between tabs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Mobile Optimization
+- Touch-friendly interface
+- Responsive design for all screen sizes
+- Optimized for thumb navigation
+- Sticky header for easy access
 
-## Deploy on Vercel
+## Development
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Project Structure
+```
+src/
+├── app/                 # Next.js app router pages
+├── components/          # Reusable components
+│   ├── ui/             # shadcn/ui components
+│   └── ...             # Custom components
+├── lib/                # Utilities and schemas
+└── public/data/        # Static data files
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Key Components
+- `LoginGate`: Authentication wrapper
+- `Header`: Sticky navigation header
+- `SongCard`: Song library item
+- `YouTubePart`: Video player component
+- `LyricBlock`: Toggleable lyrics display
+
+## Deployment
+
+1. **Build the project**:
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy to your preferred platform** (Vercel, Netlify, etc.)
+
+3. **Set environment variables** in your deployment platform:
+   - `NEXT_PUBLIC_ACCESS_CODE`: Your secret access code
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details.

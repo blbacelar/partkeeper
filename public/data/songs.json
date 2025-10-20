@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "version": 1,
+    "updatedAt": "2025-10-20T15:57:38.361Z"
+  },
+  "songs": [
+    {
+      "id": "sweet-sweet-spirit",
+      "title": "Sweet Sweet Spirit",
+      "artist": "Doris Akers",
+      "tags": [
+        "hymn",
+        "sound track"
+      ],
+      "defaultRole": "1st-tenor",
+      "parts": {
+        "1st-tenor": "https://youtu.be/xaQWeI6Duf4?si=PDGF38Um1yE_sNmX",
+        "2nd-tenor": "https://youtu.be/8T48w0G6s5s?si=C4b9y-u8qNzVv76N",
+        "baritone": "https://youtu.be/Zr9L5CqYlPQ?si=RB9Mu6hyqowZmvzJ",
+        "bass": "https://youtu.be/0TEvtzTaYR8?si=NLjeZb4hz3K_NUmD"
+      },
+      "lyrics": "Sweet, Sweet Spirit\nThere's a sweet, sweet Spirit in this place,\nAnd I know that it's the Spirit of the Lord;\nThere are sweet expressions on each face,\nAnd I know they feel the presence of the Lord.\nRefrain:\n\nSweet Holy Spirit, Sweet heavenly Dove,\nStay right here with us, filling us with Your love.\nAnd for these blessings we lift our hearts in praise;\nWithout a doubt we'll know that we have been revived,\nWhen we shall leave this place.\n\nThere are blessings you cannot receive\nTill you know Him in His fullness and believe;\nYou're the one to profit when you say,\n\"I am going to walk with Jesus all the way.\"",
+      "source": "https://www.youtube.com/watch?v=WjZuIT_NTJ8",
+      "notes": "Sing 3 verses and the refrain.",
+      "updatedAt": "2025-10-20T15:56:14.876Z"
+    },
+    {
+      "id": "gonna-do-right",
+      "title": "Gonna Do Right",
+      "artist": "Traditional",
+      "tags": [
+        "acappela"
+      ],
+      "defaultRole": "2nd-tenor",
+      "parts": {
+        "1st-tenor": "https://www.youtube.com/watch?v=LfTlX202Zig",
+        "2nd-tenor": "https://www.youtube.com/watch?v=luqz4TFsoks",
+        "baritone": "https://www.youtube.com/watch?v=xcDLjn8b95Y",
+        "bass": "https://www.youtube.com/watch?v=W9IuioEiM_Q"
+      },
+      "lyrics": "There's no need standin' up for the right\nUnless you're gonna stand up against the wrong\nTell me how you're gonna ever stop of being weak\nUnless you make your mind up to be strong\nWell, you gotta do right\n'Cause it won't be long\nIt won't be long\n\nLet me tell you that it's easy to hate your enemies\nAnd it's just as easy to love your friends\nAnd tell me you will have to love like the Bible tells you\nYou have to let the love of God come in\nWell, you gotta do right\n'Cause it won't be long\nIt won't be long\n\nDon't you wanna love Him better?\nDon't you wanna love Him more?\nCan't you hear the Saviour knocking?\nHe's knocking at your door!\n\nHaste to meet your Maker\nBefore you got to deal with the Undertaker\nHe will take you now if you are willing\nDon't you know the Bible is fulfilling?\nWell, you gotta do right\n'Cause it won't be long\nIt won't be long\n\nWell, you gotta do right\n'Cause it won't be long\nIt won't be long\n\nYou gotta do right ooh live alive\nYou gotta do right ooh live alive\nYou gotta do right ooh live alive\nYou gotta do right ooh live alive\nYou gotta do right ooh live alive\nYou gotta do right\nRight.",
+      "source": "https://www.youtube.com/watch?v=WjZuIT_NTJ8",
+      "notes": "Mind the tempo",
+      "updatedAt": "2025-10-20T15:57:28.284Z"
+    },
+    {
+      "id": "loving-god-loving-each-other",
+      "title": "Loving God, Loving Each Other",
+      "artist": "Mark Lowry",
+      "tags": [
+        "sound track"
+      ],
+      "defaultRole": "2nd-tenor",
+      "parts": {
+        "1st-tenor": "https://www.youtube.com/watch?v=8htM9qMK724",
+        "2nd-tenor": "https://www.youtube.com/watch?v=gJBwjS9knjE",
+        "baritone": "https://www.youtube.com/watch?v=BSiH-00kD2c",
+        "bass": "https://www.youtube.com/watch?v=MnNgvBC81Es"
+      },
+      "lyrics": "Loving God, loving each other\nMaking music with my friends\nLoving God, loving each other\nAnd the music never ends\n\nThey pushed back from the table\nTo listen to His words\nHis secret plan before He had to go\nIt's not complicated\nDon't need a lot of rules\nThis is all you'll need to know\n\nLoving God, loving each other\nMaking music with my friends\nLoving God, loving each other\nAnd the music never ends\n\nWe tend to make it harder\nBuild steeples out of stone\nFill with explanations of The Way\nBut if we'd stop and listen\nAnd break a little bread\nWe would hear the Master say\n\nLoving God, loving each other\nMaking music with my friends\nLoving God, loving each other\nAnd the music never ends",
+      "source": "https://www.youtube.com/watch?v=1WHFhpz00YQ",
+      "updatedAt": "2025-10-20T15:57:18.345Z"
+    },
+    {
+      "title": "Better than life",
+      "artist": "A Cappela",
+      "tags": [
+        "acappela"
+      ],
+      "defaultRole": "1st-tenor",
+      "parts": {
+        "1st-tenor": "https://youtu.be/FolkClPaUSY?si=njzAvkPwys8SaSd2",
+        "2nd-tenor": "https://www.youtube.com/watch?v=0D7z5UIPubk",
+        "baritone": "https://youtu.be/lGiES7ETJ7c?si=McxfDbiX75KcXQoi",
+        "bass": "https://youtu.be/mOUhxH-R4fg?si=uurGnPaxxeG1YOM6"
+      },
+      "lyrics": "In a dry and weary land where is no water\nMy soul is thirsting for you\nI have seen you in the sanctuary\nBeheld your power and glory\nMy lips will glorify you\nI will praise you as long as I live\nIn your name I will lift up my hands\n\nYour love is better than life\nYour love is better than life\nEarnestly I seek you\nMy soul is thirsting for you\n'Cause your love is better than life\n\nBecause you are my help I will be singing\nIn the shadow of your wing\nI'm staying close beside you\nYour right hand upholds me\nI think of you through the night\nWith singing lips I will praise\nAnd my soul will be satisfied\n\nOh, God, you are my God\nEarnestly I seek you\nI'm longing for you\nOh, God, you are my God\nEarnestly I seek you\nI'm longing for you",
+      "source": "https://youtu.be/ZgAiIEGqhvI?si=xH7UJrMipiKkiDJU",
+      "id": "song-1760972588696-akbz7e7",
+      "updatedAt": "2025-10-20T15:57:38.361Z"
+    }
+  ]
+}
