@@ -19,7 +19,7 @@ export function SongCard({ song }: SongCardProps) {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+              <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-tight">
                 {song.title}
               </CardTitle>
               {song.artist && (
@@ -37,7 +37,7 @@ export function SongCard({ song }: SongCardProps) {
           {/* Tags */}
           {song.tags && song.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-3">
-              {song.tags.slice(0, 3).map((tag) => (
+              {song.tags.slice(0, 4).map((tag) => (
                 <Badge
                   key={tag}
                   variant="secondary"
@@ -46,9 +46,9 @@ export function SongCard({ song }: SongCardProps) {
                   {tag}
                 </Badge>
               ))}
-              {song.tags.length > 3 && (
+              {song.tags.length > 4 && (
                 <Badge variant="outline" className="text-xs px-2 py-1">
-                  +{song.tags.length - 3} more
+                  +{song.tags.length - 4} more
                 </Badge>
               )}
             </div>

@@ -61,7 +61,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="space-y-8">
           {/* Header Section */}
           <div className="text-center space-y-4">
@@ -95,7 +95,7 @@ export default function Dashboard() {
 
           {/* Songs Grid */}
           {filteredSongs.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {filteredSongs.map((song) => (
                 <SongCard key={song.id} song={song} />
               ))}
