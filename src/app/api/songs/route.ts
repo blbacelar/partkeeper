@@ -6,11 +6,23 @@ const repo = createSongsRepository<Song>()
 
 export async function GET() {
   try {
+    console.log('API: Getting songs from database...')
+    console.log('API: DATABASE_URL exists:', !!process.env.DATABASE_URL)
+    console.log('API: NODE_ENV:', process.env.NODE_ENV)
+    
     const data = await repo.list()
+    console.log('API: Retrieved songs count:', data.songs.length)
     return NextResponse.json(data)
   } catch (error) {
     console.error('Error reading songs:', error)
-    return NextResponse.json({ error: 'Failed to read songs' }, { status: 500 })
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    })
+    return NextResponse.json({ 
+      error: 'Failed to read songs',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 

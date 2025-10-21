@@ -11,13 +11,20 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
   async list(): Promise<SongsRepoRecord<TSong>> {
     this.checkPrisma()
     
+    console.log('PrismaSongsRepository: Starting to fetch songs...')
+    console.log('PrismaSongsRepository: DATABASE_URL exists:', !!process.env.DATABASE_URL)
+    
     const songs = await prisma.song.findMany({
       orderBy: { createdAt: 'desc' }
     })
     
+    console.log('PrismaSongsRepository: Found songs:', songs.length)
+    
     const meta = await prisma.meta.findFirst({
       orderBy: { updatedAt: 'desc' }
     })
+    
+    console.log('PrismaSongsRepository: Meta found:', !!meta)
 
     return {
       meta: {
