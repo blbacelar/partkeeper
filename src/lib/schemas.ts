@@ -5,13 +5,13 @@ export const roleSchema = z.enum(['1st-tenor', '2nd-tenor', 'baritone', 'bass'])
 export const songSchema = z.object({
   id: z.string(),
   title: z.string(),
-  artist: z.string().optional(),
+  artist: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
   defaultRole: roleSchema.optional(),
   parts: z.record(roleSchema, z.string()),
-  lyrics: z.string().optional(),
-  source: z.string().optional(),
-  notes: z.string().optional(),
+  lyrics: z.string().nullable().optional(),
+  source: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
   updatedAt: z.string().optional(),
 })
 

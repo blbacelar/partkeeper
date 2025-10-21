@@ -25,7 +25,10 @@ export default function SongDetails() {
   useEffect(() => {
     async function loadSong() {
       try {
-        const response = await fetch('/data/songs.json')
+        const response = await fetch('/api/songs')
+        if (!response.ok) {
+          throw new Error('Failed to load songs')
+        }
         const data = await response.json()
         const validatedData = songsDataSchema.parse(data)
         const foundSong = validatedData.songs.find(s => s.id === params.id)
