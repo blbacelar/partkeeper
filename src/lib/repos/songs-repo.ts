@@ -136,27 +136,10 @@ class MemorySongsRepository<TSong extends { id: string }> implements SongsReposi
   }
 }
 
-// Factory
+// Factory - Database only
 export function createSongsRepository<TSong extends { id: string }>(): SongsRepository<TSong> {
-  const backend = process.env.NEXT_PUBLIC_SONGS_BACKEND || "file"
-  const isProduction = process.env.NODE_ENV === "production"
-  
-  if (backend === "file") {
-    // Use memory repository in production (Vercel serverless)
-    if (isProduction) {
-      return new MemorySongsRepository<TSong>()
-    }
-    // Use file repository in development
-    const path = process.env.SONGS_FILE_PATH || join(process.cwd(), "public", "data", "songs.json")
-    return new FileSongsRepository<TSong>(path)
-  }
-  
-  if (backend === "prisma") {
-    // Dynamic import to avoid loading Prisma client when not needed
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { PrismaSongsRepository } = require('./prisma-songs-repo')
-    return new (PrismaSongsRepository as new () => SongsRepository<TSong>)()
-  }
-  
-  throw new Error(`Unsupported backend: ${backend}`)
+  // Dynamic import to avoid loading Prisma client when not needed
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { PrismaSongsRepository } = require('./prisma-songs-repo')
+  return new (PrismaSongsRepository as new () => SongsRepository<TSong>)()
 }
