@@ -53,6 +53,8 @@ export function YouTubePart({ videoId, title }: YouTubePartProps) {
   const [fineTuneCents, setFineTuneCents] = useState(0)
   const [speedPercent, setSpeedPercent] = useState(100)
   const [appliedPlaybackRate, setAppliedPlaybackRate] = useState(1)
+  const [desiredPlaybackRate, setDesiredPlaybackRate] = useState(1)
+  const [isSnappedToAvailableRate, setIsSnappedToAvailableRate] = useState(false)
   const playerContainerRef = useRef<HTMLDivElement | null>(null)
   const playerRef = useRef<YTPlayer | null>(null)
   const loadPromiseRef = useRef<Promise<YouTubeApi | undefined> | null>(null)
@@ -133,25 +135,30 @@ export function YouTubePart({ videoId, title }: YouTubePartProps) {
     const transposeMultiplier = Math.pow(2, pitchSemitones / 12)
     const fineMultiplier = Math.pow(2, fineTuneCents / 1200)
     const desiredRate = (speedPercent / 100) * transposeMultiplier * fineMultiplier
+    setDesiredPlaybackRate(desiredRate)
 
     const availableRates = player.getAvailablePlaybackRates?.()
-    let targetRate = desiredRate
+    let appliedRate = desiredRate
+    let snapped = false
 
     if (availableRates && availableRates.length > 0) {
-      const closest = availableRates.reduce((prev, candidate) => {
-        const prevDiff = Math.abs(prev - desiredRate)
-        const candidateDiff = Math.abs(candidate - desiredRate)
+      const sortedRates = [...availableRates].sort((a, b) => a - b)
+      const boundedRate = Math.min(sortedRates[sortedRates.length - 1], Math.max(sortedRates[0], desiredRate))
+      const closest = sortedRates.reduce((prev, candidate) => {
+        const prevDiff = Math.abs(prev - boundedRate)
+        const candidateDiff = Math.abs(candidate - boundedRate)
         return candidateDiff < prevDiff ? candidate : prev
-      }, availableRates[0])
+      }, sortedRates[0])
 
-      if (Math.abs(closest - desiredRate) <= 0.01) {
-        targetRate = closest
-      }
+      appliedRate = closest
+      snapped = Math.abs(closest - desiredRate) > 0.001
+    } else {
+      appliedRate = Math.min(Math.max(desiredRate, 0.0625), 4)
     }
 
-    const clampedRate = Math.min(Math.max(targetRate, 0.0625), 4)
-    player.setPlaybackRate(clampedRate)
-    setAppliedPlaybackRate(clampedRate)
+    player.setPlaybackRate(appliedRate)
+    setAppliedPlaybackRate(appliedRate)
+    setIsSnappedToAvailableRate(snapped)
   }, [fineTuneCents, pitchSemitones, speedPercent])
 
   const loadYouTubeApi = useCallback(() => {
@@ -240,6 +247,8 @@ export function YouTubePart({ videoId, title }: YouTubePartProps) {
 
     setIsPlayerReady(false)
     setAppliedPlaybackRate(1)
+    setDesiredPlaybackRate(1)
+    setIsSnappedToAvailableRate(false)
     setLoopEnabled(false)
     setLoopStart(null)
     setLoopEnd(null)
@@ -511,7 +520,12 @@ export function YouTubePart({ videoId, title }: YouTubePartProps) {
                 <RotateCw className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-zinc-400">Playback rate applied: {appliedPlaybackRate.toFixed(2)}x</p>
+            <p className="text-xs text-zinc-400">
+              Requested rate: {desiredPlaybackRate.toFixed(2)}x{' '}
+              {isSnappedToAvailableRate
+                ? `• YouTube applied ${appliedPlaybackRate.toFixed(2)}x`
+                : `• Applied ${appliedPlaybackRate.toFixed(2)}x`}
+            </p>
           </div>
 
           <div className="space-y-2 rounded-2xl border border-dashed border-amber-500/50 bg-amber-500/5 p-4 text-sm text-amber-200">
