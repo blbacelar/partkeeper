@@ -41,6 +41,8 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
   const [isUploadingSoundTrack, setIsUploadingSoundTrack] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null)
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
   const soundTrackFileInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
@@ -63,6 +65,7 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
       })
       if (song.soundTrackUrl) {
         setUploadedFileName(song.soundTrackUrl.split('/').pop() || null)
+        setUploadSuccess(true)
       }
     }
   }, [song])
@@ -150,6 +153,8 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
 
     setIsUploadingSoundTrack(true)
     setUploadError(null)
+    setUploadProgress(0)
+    setUploadSuccess(false)
 
     try {
       const response = await fetch('/api/soundtrack/upload-url', {
@@ -167,26 +172,43 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
 
       const { uploadUrl, publicUrl } = await response.json()
 
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': file.type || 'audio/mpeg',
-        },
-        body: file,
+      const xhr = new XMLHttpRequest()
+      xhr.open('PUT', uploadUrl)
+      xhr.setRequestHeader('Content-Type', file.type || 'audio/mpeg')
+      xhr.setRequestHeader('x-upsert', 'true')
+
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded / event.total) * 100)
+          setUploadProgress(percent)
+        }
+      }
+
+      const uploadPromise = new Promise<void>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve()
+          } else {
+            reject(new Error('Failed to upload soundtrack file'))
+          }
+        }
+        xhr.onerror = () => reject(new Error('Failed to upload soundtrack file'))
       })
 
-      if (!uploadResponse.ok) {
-        throw new Error('Failed to upload soundtrack file')
-      }
+      xhr.send(file)
+      await uploadPromise
 
       setFormData(prev => ({
         ...prev,
         soundTrackUrl: publicUrl,
       }))
       setUploadedFileName(file.name)
+      setUploadSuccess(true)
+      setUploadProgress(100)
     } catch (error) {
       console.error(error)
       setUploadError(error instanceof Error ? error.message : 'Failed to upload soundtrack')
+      setUploadProgress(null)
     } finally {
       setIsUploadingSoundTrack(false)
     }
@@ -206,6 +228,8 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
     }))
     setUploadedFileName(null)
     setUploadError(null)
+    setUploadProgress(null)
+    setUploadSuccess(false)
   }
 
   return (
@@ -364,11 +388,25 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
                     </Button>
                   </div>
                 </div>
+                {uploadProgress !== null && (
+                  <div className="space-y-1">
+                    <div className="h-2 w-full rounded bg-muted overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Upload progress</span>
+                      <span>{uploadProgress}%</span>
+                    </div>
+                  </div>
+                )}
+                {uploadSuccess && uploadProgress === 100 && (
+                  <p className="text-xs text-emerald-600">Upload complete.</p>
+                )}
                 {uploadError && (
                   <p className="text-sm text-destructive">{uploadError}</p>
-                )}
-                {isUploadingSoundTrack && (
-                  <p className="text-sm text-muted-foreground">Uploading new file...</p>
                 )}
               </div>
             ) : (
@@ -390,6 +428,20 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
                     <span className="text-muted-foreground">Uploading...</span>
                   )}
                 </div>
+                {uploadProgress !== null && (
+                  <div className="space-y-1">
+                    <div className="h-2 w-full rounded bg-muted overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Upload progress</span>
+                      <span>{uploadProgress}%</span>
+                    </div>
+                  </div>
+                )}
                 {uploadError && (
                   <p className="text-sm text-destructive">{uploadError}</p>
                 )}

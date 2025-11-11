@@ -258,6 +258,11 @@ export default function SongDetails() {
                       >
                         Your browser does not support the audio element.
                       </audio>
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={song.soundTrackUrl} target="_blank" rel="noopener noreferrer" download>
+                          Download
+                        </a>
+                      </Button>
                     </CardContent>
                   </Card>
                 </motion.div>

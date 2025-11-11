@@ -94,6 +94,19 @@ export function SongCard({ song }: SongCardProps) {
                 <span>Updated {new Date(song.updatedAt).toLocaleDateString()}</span>
               </div>
             )}
+
+            {hasSoundTrack && (
+              <div className="mt-3">
+                <audio
+                  controls
+                  preload="none"
+                  className="w-full"
+                  src={song.soundTrackUrl ?? undefined}
+                >
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
