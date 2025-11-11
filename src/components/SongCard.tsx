@@ -12,6 +12,7 @@ export function SongCard({ song }: SongCardProps) {
   const availableParts = Object.keys(song.parts).length
   const hasSource = !!song.source
   const hasLyrics = !!song.lyrics
+  const hasSoundTrack = !!song.soundTrackUrl
 
   return (
     <Link href={`/songs/${song.id}`} className="block group">
@@ -34,10 +35,9 @@ export function SongCard({ song }: SongCardProps) {
         </CardHeader>
         
         <CardContent className="pt-0">
-          {/* Tags */}
-          {song.tags && song.tags.length > 0 && (
+          {(song.tags && song.tags.length > 0) || hasSoundTrack ? (
             <div className="flex flex-wrap gap-1.5 mb-3">
-              {song.tags.slice(0, 4).map((tag) => (
+              {song.tags?.slice(0, 4).map((tag) => (
                 <Badge
                   key={tag}
                   variant="secondary"
@@ -46,13 +46,18 @@ export function SongCard({ song }: SongCardProps) {
                   {tag}
                 </Badge>
               ))}
-              {song.tags.length > 4 && (
+              {song.tags && song.tags.length > 4 && (
                 <Badge variant="outline" className="text-xs px-2 py-1">
                   +{song.tags.length - 4} more
                 </Badge>
               )}
+              {hasSoundTrack && (
+                <Badge className="text-xs px-2 py-1 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 transition-colors">
+                  Sound Track
+                </Badge>
+              )}
             </div>
-          )}
+          ) : null}
 
           {/* Features */}
           <div className="space-y-2">
@@ -61,7 +66,7 @@ export function SongCard({ song }: SongCardProps) {
               <span>{availableParts} voice parts available</span>
             </div>
             
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
               {hasSource && (
                 <div className="flex items-center gap-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -72,6 +77,12 @@ export function SongCard({ song }: SongCardProps) {
                 <div className="flex items-center gap-1">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <span>Lyrics included</span>
+                </div>
+              )}
+              {hasSoundTrack && (
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>Sound track available</span>
                 </div>
               )}
             </div>
