@@ -14,6 +14,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
     "@prisma/client": "^6.17.1",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.1.1",

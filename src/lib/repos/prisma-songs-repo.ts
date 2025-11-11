@@ -42,6 +42,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
           parts: s.parts as Record<string, string>,
           lyrics: s.lyrics as string | null,
           source: s.source as string | null,
+          soundTrackUrl: s.soundTrackUrl as string | null,
           notes: s.notes as string | null,
           updatedAt: (s.updatedAt as Date).toISOString()
         } as unknown as TSong
@@ -61,6 +62,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
         parts: (songData.parts as Record<string, string>) || {},
         lyrics: songData.lyrics as string | null,
         source: songData.source as string | null,
+        soundTrackUrl: songData.soundTrackUrl as string | null,
         notes: songData.notes as string | null
       }
     })
@@ -77,6 +79,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
       parts: song.parts as Record<string, string>,
       lyrics: song.lyrics,
       source: song.source,
+      soundTrackUrl: song.soundTrackUrl,
       notes: song.notes,
       updatedAt: song.updatedAt.toISOString()
     } as unknown as TSong
@@ -95,6 +98,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
         parts: (songData.parts as Record<string, string>) || {},
         lyrics: songData.lyrics as string | null,
         source: songData.source as string | null,
+        soundTrackUrl: songData.soundTrackUrl as string | null,
         notes: songData.notes as string | null
       }
     })
@@ -111,6 +115,7 @@ export class PrismaSongsRepository<TSong extends { id: string }> implements Song
       parts: song.parts as Record<string, string>,
       lyrics: song.lyrics,
       source: song.source,
+      soundTrackUrl: song.soundTrackUrl,
       notes: song.notes,
       updatedAt: song.updatedAt.toISOString()
     } as unknown as TSong

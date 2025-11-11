@@ -47,6 +47,7 @@ async function seedDatabase() {
           parts: song.parts,
           lyrics: song.lyrics,
           source: song.source,
+          soundTrackUrl: song.soundTrackUrl,
           notes: song.notes,
           updatedAt: new Date(song.updatedAt),
           createdAt: new Date(song.updatedAt) // Use updatedAt as createdAt for existing songs

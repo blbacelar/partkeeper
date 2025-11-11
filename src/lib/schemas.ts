@@ -11,6 +11,7 @@ export const songSchema = z.object({
   parts: z.record(roleSchema, z.string()),
   lyrics: z.string().nullable().optional(),
   source: z.string().nullable().optional(),
+  soundTrackUrl: z.string().url().nullable().optional(),
   notes: z.string().nullable().optional(),
   updatedAt: z.string().optional(),
 })

@@ -59,6 +59,8 @@ export default function SongDetails() {
       const hash = window.location.hash.slice(1)
       if (hash === 'reference' && song?.source) {
         setActiveTab('reference')
+      } else if (hash === 'soundtrack' && song?.soundTrackUrl) {
+        setActiveTab('soundtrack')
       } else if (hash && roles.includes(hash as Role) && song?.parts[hash as Role]) {
         setActiveTab(hash)
         setStoredTab(song.id, hash as Role)
@@ -72,14 +74,13 @@ export default function SongDetails() {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value)
-    if (song && value !== 'reference') {
+    if (song && value !== 'reference' && value !== 'soundtrack') {
       const role = value as Role
       setStoredTab(song.id, role)
       // Update URL hash
       window.location.hash = role
-    } else if (value === 'reference') {
-      // Update URL hash for reference
-      window.location.hash = 'reference'
+    } else if (value === 'reference' || value === 'soundtrack') {
+      window.location.hash = value
     }
   }
 
@@ -161,20 +162,29 @@ export default function SongDetails() {
           </Card>
 
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="flex flex-wrap w-full gap-2">
               <TabsTrigger
                 value="reference"
                 disabled={!song.source}
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm px-3 py-1"
               >
                 Reference
               </TabsTrigger>
+              {song.soundTrackUrl && (
+                <TabsTrigger
+                  value="soundtrack"
+                  disabled={!song.soundTrackUrl}
+                  className="text-xs sm:text-sm px-3 py-1"
+                >
+                  Sound Track
+                </TabsTrigger>
+              )}
               {roles.map((role) => (
                 <TabsTrigger
                   key={role}
                   value={role}
                   disabled={!song.parts[role]}
-                  className="text-xs sm:text-sm"
+                  className="text-xs sm:text-sm px-3 py-1"
                 >
                   {role}
                 </TabsTrigger>
@@ -216,6 +226,45 @@ export default function SongDetails() {
                       </CardContent>
                     </Card>
                   )}
+                </motion.div>
+              </TabsContent>
+            )}
+
+            {/* Sound Track Tab */}
+            {song.soundTrackUrl && (
+              <TabsContent value="soundtrack" className="mt-6">
+                <motion.div
+                  key="soundtrack"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Music className="w-5 h-5" />
+                        Sound Track
+                      </CardTitle>
+                      <CardDescription>
+                        Listen to the uploaded backing track for this song.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <audio
+                        controls
+                        className="w-full"
+                        src={song.soundTrackUrl}
+                      >
+                        Your browser does not support the audio element.
+                      </audio>
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={song.soundTrackUrl} target="_blank" rel="noopener noreferrer">
+                          Open in new tab
+                        </a>
+                      </Button>
+                    </CardContent>
+                  </Card>
                 </motion.div>
               </TabsContent>
             )}

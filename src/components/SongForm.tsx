@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -31,12 +31,17 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
     },
     lyrics: '',
     source: '',
+    soundTrackUrl: '',
     notes: ''
   })
 
   const [newTag, setNewTag] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [isUploadingSoundTrack, setIsUploadingSoundTrack] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null)
+  const soundTrackFileInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     if (song) {
@@ -53,8 +58,12 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
         },
         lyrics: song.lyrics || '',
         source: song.source || '',
+        soundTrackUrl: song.soundTrackUrl || '',
         notes: song.notes || ''
       })
+      if (song.soundTrackUrl) {
+        setUploadedFileName(song.soundTrackUrl.split('/').pop() || null)
+      }
     }
   }, [song])
 
@@ -91,6 +100,7 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
         defaultRole: formData.defaultRole || undefined,
         lyrics: formData.lyrics || undefined,
         source: formData.source || undefined,
+        soundTrackUrl: formData.soundTrackUrl || undefined,
         notes: formData.notes || undefined
       }
 
@@ -125,6 +135,77 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
         [role]: value
       }
     }))
+  }
+  
+  const handleSoundTrackUpload = async (file: File) => {
+    if (!file) return
+    if (!['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/flac', 'audio/aac'].includes(file.type)) {
+      setUploadError('Unsupported file type. Please upload an MP3, WAV, AAC, or FLAC file.')
+      return
+    }
+    if (file.size > 25 * 1024 * 1024) {
+      setUploadError('File is too large. Please upload a file smaller than 25 MB.')
+      return
+    }
+
+    setIsUploadingSoundTrack(true)
+    setUploadError(null)
+
+    try {
+      const response = await fetch('/api/soundtrack/upload-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type || 'audio/mpeg',
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get upload URL')
+      }
+
+      const { uploadUrl, publicUrl } = await response.json()
+
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type || 'audio/mpeg',
+        },
+        body: file,
+      })
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload soundtrack file')
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        soundTrackUrl: publicUrl,
+      }))
+      setUploadedFileName(file.name)
+    } catch (error) {
+      console.error(error)
+      setUploadError(error instanceof Error ? error.message : 'Failed to upload soundtrack')
+    } finally {
+      setIsUploadingSoundTrack(false)
+    }
+  }
+
+  const handleSoundTrackFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    void handleSoundTrackUpload(file)
+    event.target.value = ''
+  }
+
+  const handleRemoveSoundTrack = () => {
+    setFormData(prev => ({
+      ...prev,
+      soundTrackUrl: ''
+    }))
+    setUploadedFileName(null)
+    setUploadError(null)
   }
 
   return (
@@ -228,6 +309,92 @@ export function SongForm({ song, onSave, onCancel, isEditing = false }: SongForm
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Sound Track */}
+          <div className="space-y-2">
+            <Label htmlFor="soundtrack">Sound Track (optional)</Label>
+            <Input
+              id="soundtrack"
+              ref={soundTrackFileInputRef}
+              type="file"
+              accept="audio/*"
+              onChange={handleSoundTrackFileChange}
+              disabled={isUploadingSoundTrack || isLoading}
+              className="hidden"
+            />
+            {formData.soundTrackUrl ? (
+              <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
+                <audio src={formData.soundTrackUrl} controls className="w-full" />
+                <div className="flex flex-wrap gap-3 items-center justify-between text-sm">
+                  <div className="space-y-1 min-w-0">
+                    <p className="font-medium">Current file</p>
+                    <p className="text-muted-foreground break-all">
+                      {uploadedFileName || formData.soundTrackUrl.split('/').pop()}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => soundTrackFileInputRef.current?.click()}
+                      disabled={isUploadingSoundTrack || isLoading}
+                    >
+                      Replace
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      asChild
+                    >
+                      <a href={formData.soundTrackUrl} target="_blank" rel="noopener noreferrer">
+                        Open
+                      </a>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveSoundTrack}
+                      disabled={isUploadingSoundTrack || isLoading}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+                {uploadError && (
+                  <p className="text-sm text-destructive">{uploadError}</p>
+                )}
+                {isUploadingSoundTrack && (
+                  <p className="text-sm text-muted-foreground">Uploading new file...</p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-3 rounded-lg border border-dashed p-4 text-sm">
+                <div className="space-y-1 text-muted-foreground">
+                  <p>Select an audio file to use as the sound track.</p>
+                  <p>Supported formats: MP3, WAV, AAC, FLAC. Max size 25 MB.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => soundTrackFileInputRef.current?.click()}
+                    disabled={isUploadingSoundTrack || isLoading}
+                  >
+                    Choose File
+                  </Button>
+                  {isUploadingSoundTrack && (
+                    <span className="text-muted-foreground">Uploading...</span>
+                  )}
+                </div>
+                {uploadError && (
+                  <p className="text-sm text-destructive">{uploadError}</p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Lyrics */}
